@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 0000-app-of-the-apps
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+  sources:
+  - repoURL: https://github.com/AlexisDucastel/argocd-generic-k8s.git
+    path: apps
+    targetRevision: main
+    directory:
+      jsonnet: {}
+      recurse: true
+  

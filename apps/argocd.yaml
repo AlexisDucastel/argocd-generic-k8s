@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-self-managed
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+  source:
+    repoURL: oci://ghcr.io/argoproj/argo-helm/argo-cd
+    chart: argo-cd
+    targetRevision: "x"
+    helm:
+      releaseName: argocd
+      # values : https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
+      valuesObject:
+        server:
+          service:
+            type: ClusterIP
+        controller:
+          replicas: 1
+        configs:
+          repositories:
+            argocd-generic-k8s:
+              url: https://github.com/AlexisDucastel/argocd-generic-k8s.git
+              name: argocd-generic-k8s
+              type: git
