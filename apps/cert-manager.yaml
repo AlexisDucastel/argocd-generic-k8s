@@ -7,13 +7,16 @@ spec:
     - clusters:
         selector:
           matchExpressions:
-            # If label exists and it’s not "false"
+            - key: app/cert-manager
+              operator: DoesNotExist
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: app/cert-manager
+              operator: Exists
             - key: app/cert-manager
               operator: NotIn
               values: ["false"]
-            # If label does not exist
-            - key: app/cert-manager
-              operator: DoesNotExist
   template:
     metadata:
       name: '{{name}}-cert-manager'
