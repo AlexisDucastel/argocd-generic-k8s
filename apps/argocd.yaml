@@ -16,7 +16,7 @@ spec:
       - ApplyOutOfSyncOnly=true
       - ServerSideApply=true
   source:
-    repoURL: ghcr.io/argoproj/argo-helm/argo-cd
+    repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
     targetRevision: "x"
     helm:
