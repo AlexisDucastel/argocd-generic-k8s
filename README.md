@@ -1,6 +1,12 @@
 
 
+## One-line install
 
+```
+curl -L https://raw.githubusercontent.com/AlexisDucastel/argocd-generic-k8s/refs/heads/main/setup.sh | bash
+```
+
+## Troubleshooting ArgoCD
 
 ```bash
 
