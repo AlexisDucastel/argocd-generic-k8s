@@ -1,25 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cert-manager
+  name: local-path-storage
 spec:
   generators:
     - clusters:
         selector:
           matchExpressions:
-            - key: app/cert-manager
+            - key: app/local-path-storage
               operator: Exists
-            - key: app/cert-manager
+            - key: app/local-path-storage
               operator: In
               values: ["true"]
   template:
     metadata:
-      name: '{{name}}-cert-manager'
+      name: '{{name}}-local-path-storage'
     spec:
       project: default
       destination:
         server: '{{server}}'
-        namespace: cert-manager
+        namespace: local-path-storage
       syncPolicy:
         automated:
           prune: true
@@ -27,10 +27,6 @@ spec:
         syncOptions:
           - CreateNamespace=true
       source:
-        repoURL: https://charts.jetstack.io
-        chart: cert-manager
-        targetRevision: v1.x
-        helm:
-          valuesObject:
-            crds:
-              enabled: true
+      - repoURL: https://github.com/AlexisDucastel/argocd-generic-k8s.git
+        targetRevision: main
+        path: config/local-path-storage/

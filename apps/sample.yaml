@@ -1,0 +1,50 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: <application-name>
+# spec:
+#   generators:
+#     # Installed if enabled
+#     - clusters:
+#         selector:
+#           matchExpressions:
+#             - key: app/<application-name>
+#               operator: Exists
+#             - key: app/<application-name>
+#               operator: In
+#               values: ["true"]
+#     # Installed by default if not disabled
+#     - clusters:
+#         selector:
+#           matchExpressions:
+#             - key: app/<application-name>
+#               operator: DoesNotExist
+#     - clusters:
+#         selector:
+#           matchExpressions:
+#             - key: app/<application-name>
+#               operator: Exists
+#             - key: app/<application-name>
+#               operator: NotIn
+#               values: ["false"]
+#   template:
+#     metadata:
+#       name: '{{name}}-<application-name>'
+#     spec:
+#       project: default
+#       destination:
+#         server: '{{server}}'
+#         namespace: <namespace>
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
+#         syncOptions:
+#           - CreateNamespace=true
+#       source:
+#         repoURL: https://<chart-repo>
+#         chart: <chart-name>
+#         targetRevision: <chart-version>
+#         helm:
+#           valuesObject:
+#             <values>
