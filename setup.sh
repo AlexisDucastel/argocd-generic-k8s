@@ -8,11 +8,14 @@ for binary in helm kubectl grep sed mktemp curl tr; do
   }
 done
 
-# If namespace argocd already exists and has no label argocd-generic-k8s/installed, then it's a custom install and we should not overwrite it
-if [ "$(kubectl get namespace argocd -o jsonpath='{.metadata.labels.argocd-generic-k8s/installed}')" != "true" ]; then
-  echo "Error: namespace argocd already exists and is not a argocd-generic-k8s install, aborting..."
-  exit 1
-fi
+# If namespace argocd already exists 
+if [ "$(kubectl get namespace argocd >/dev/null 2>&1; echo $?)" -eq 0 ]; then
+  # and has no label argocd-generic-k8s/installed, then it's a custom install and we should not overwrite it
+  if [ "$(kubectl get namespace argocd -o jsonpath='{.metadata.labels.argocd-generic-k8s/installed}')" != "true" ]; then
+    echo "Error: namespace argocd already exists and is not a argocd-generic-k8s install, aborting..."
+    exit 1
+  fi
+fi 
 
 AUTOREMOVE_ARGO_APP=0
 ARGO_APP_PATH="apps/argocd.yaml"
