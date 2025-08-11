@@ -29,7 +29,7 @@
 #               values: ["false"]
 #   template:
 #     metadata:
-#       name: '{{name}}-<application-name>'
+#       name: '<application-name>'
 #     spec:
 #       project: default
 #       destination:

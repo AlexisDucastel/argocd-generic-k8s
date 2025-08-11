@@ -14,7 +14,7 @@ spec:
               values: ["true"]
   template:
     metadata:
-      name: '{{name}}-local-path-storage'
+      name: 'local-path-storage'
     spec:
       project: default
       destination:

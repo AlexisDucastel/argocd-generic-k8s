@@ -14,7 +14,7 @@ spec:
               values: ["true"]
   template:
     metadata:
-      name: '{{name}}-cert-manager'
+      name: 'cert-manager'
     spec:
       project: default
       destination:
