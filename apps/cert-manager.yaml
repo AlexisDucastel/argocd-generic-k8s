@@ -10,7 +10,7 @@ spec:
     - clusters:
         selector:
           matchExpressions:
-            - key: feat/cert-manager
+            - key: "feat/cert-manager"
               operator: In
               values: ["jetstack/cert-manager"]
   template:

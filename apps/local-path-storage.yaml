@@ -10,7 +10,7 @@ spec:
     - clusters:
         selector:
           matchExpressions:
-            - key: feat/csi
+            - key: "feat/csi"
               operator: In
               values: ["local-path-storage"]
   template:
