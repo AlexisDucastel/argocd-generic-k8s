@@ -124,7 +124,7 @@ function list {
   #   done
 
   kubectl -n argocd get secret local  \
-    -o go-template='{{printf "%-30s %-30s\n" "Label" "value"}}{{range $k,$v := .metadata.labels}}{{printf "%-30s %-30s\n" $k $v}}{{end}}' \
+    -o go-template='{{printf "%-30s %-30s\n" "Label" "value"}}{{range $k,$v := .metadata.labels}}{{printf "%-30s %-30s\n" $k $v}}{{end}}'
 }
 
 function add {
