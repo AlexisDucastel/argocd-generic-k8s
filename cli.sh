@@ -9,7 +9,7 @@ for binary in helm kubectl grep sed mktemp curl tr; do
 done
 
 
-function init() {
+function init {
   # If namespace argocd already exists 
   if [ "$(kubectl get namespace argocd >/dev/null 2>&1; echo $?)" -eq 0 ]; then
     # and has no label argocd-generic-k8s/installed, then it's a custom install and we should not overwrite it
@@ -108,7 +108,7 @@ EOF
   echo "Setup done."
 }
 
-function help() {
+function help {
     echo "Usage: $0 <command>"
     echo "Commands:"
     echo "  help - Show this help message"
@@ -118,7 +118,7 @@ function help() {
 if [ $# -eq 0 ]; then
     help
     exit 1
-}
+fi
 
 case $1 in
     help)
