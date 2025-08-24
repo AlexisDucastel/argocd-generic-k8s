@@ -2,6 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: cert-manager-jetstack
+  labels:
+    alias: cm
+    selector: "feat/cert-manager=jetstack/cert-manager"
 spec:
   generators:
     - clusters:

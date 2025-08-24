@@ -2,6 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: csi-local-path-storage
+  labels:
+    alias: csilocal
+    selector: "feat/csi=local-path-storage"
 spec:
   generators:
     - clusters:

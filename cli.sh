@@ -115,6 +115,26 @@ function help {
     echo "  init - Install or upgrade argocd-generic-k8s stack"
 }
 
+
+function list {
+  # kubectl -n argocd get secret local \
+  #   -o go-template='{{range $k,$v := .metadata.labels}}{{printf "%s %s\n" $k $v}}{{end}}' \
+  #   | grep -E "^(feat|app)/" | while read label value; do
+  #     echo "  $label: $value"
+  #   done
+
+  kubectl -n argocd get secret local  \
+    -o go-template='{{printf "%-30s %-30s\n" "Label" "value"}}{{range $k,$v := .metadata.labels}}{{printf "%-30s %-30s\n" $k $v}}{{end}}' \
+}
+
+function add {
+  kubectl -n argocd label secret local "$1"
+}
+
+function remove {
+  kubectl -n argocd label secret local "$1"-
+}
+
 if [ $# -eq 0 ]; then
     help
     exit 1
@@ -126,6 +146,15 @@ case $1 in
         ;;
     init)
         init
+        ;;
+    list)
+        list
+        ;;
+    add)
+        add $2
+        ;;
+    remove)
+        remove $2
         ;;
     *)
         help
