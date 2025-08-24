@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: csi-longhorn
+  labels:
+    alias: csilonghorn
+    feat: csi
+    flavor: longhorn
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: "feat/csi"
+              operator: In
+              values: ["longhorn"]
+  template:
+    metadata:
+      name: 'csi-longhorn'
+    spec:
+      project: default
+      destination:
+        server: '{{server}}'
+        namespace: longhorn-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      sources:
+      - repoURL: https://charts.longhorn.io
+        chart: longhorn
+        targetRevision: ^1.x
+        helm:
+          valuesObject:
+            preUpgradeChecker:
+              jobEnabled: false
+            metrics:
+              serviceMonitor:
+                enabled: false
