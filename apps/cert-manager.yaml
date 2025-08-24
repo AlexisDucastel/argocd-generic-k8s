@@ -1,17 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cert-manager
+  name: cert-manager-jetstack
 spec:
   generators:
     - clusters:
         selector:
           matchExpressions:
-            - key: app/cert-manager
-              operator: Exists
-            - key: app/cert-manager
+            - key: feat/cert-manager
               operator: In
-              values: ["true"]
+              values: ["jetstack/cert-manager"]
   template:
     metadata:
       name: 'cert-manager'

@@ -1,20 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: local-path-storage
+  name: csi-local-path-storage
 spec:
   generators:
     - clusters:
         selector:
           matchExpressions:
-            - key: app/local-path-storage
-              operator: Exists
-            - key: app/local-path-storage
+            - key: feat/csi
               operator: In
-              values: ["true"]
+              values: ["local-path-storage"]
   template:
     metadata:
-      name: 'local-path-storage'
+      name: 'csi-local-path-storage'
     spec:
       project: default
       destination:
@@ -29,4 +27,4 @@ spec:
       sources:
       - repoURL: https://github.com/AlexisDucastel/argocd-generic-k8s.git
         targetRevision: main
-        path: config/local-path-storage/
+        path: config/csi-local-path-storage/
