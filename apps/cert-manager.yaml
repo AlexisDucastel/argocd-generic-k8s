@@ -17,6 +17,9 @@ spec:
   template:
     metadata:
       name: 'cert-manager'
+      labels:
+        feat: cert-manager
+        flavor: jetstack
     spec:
       project: default
       destination:

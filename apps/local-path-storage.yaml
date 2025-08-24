@@ -17,6 +17,9 @@ spec:
   template:
     metadata:
       name: 'csi-local-path-storage'
+      labels:
+        feat: csi
+        flavor: local-path-storage
     spec:
       project: default
       destination:

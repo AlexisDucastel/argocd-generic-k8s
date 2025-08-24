@@ -17,6 +17,9 @@ spec:
   template:
     metadata:
       name: 'csi-longhorn'
+      labels:
+        feat: csi
+        flavor: longhorn
     spec:
       project: default
       destination:
