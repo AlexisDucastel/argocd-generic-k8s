@@ -17,7 +17,7 @@ spec:
   goTemplate: true
   template:
     metadata:
-      name: 'cert-manager'
+      name: 'cert-manager-jetstack'
       labels:
         feat: cert-manager
         flavor: jetstack
