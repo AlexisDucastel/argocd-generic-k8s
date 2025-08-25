@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: csi-longhorn
+  annotations:
+    description: Longhorn Storage uses a distributed block storage system to provide block storage to pods.
   labels:
     alias: csilonghorn
     feat: csi

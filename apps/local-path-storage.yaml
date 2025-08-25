@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: csi-local-path-storage
+  annotations:
+    description: Local Path Storage uses node local storage to provide block storage to pods.
   labels:
     alias: csilocal
     feat: csi
