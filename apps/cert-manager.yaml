@@ -37,11 +37,11 @@ spec:
         chart: cert-manager
         targetRevision: v1.x
         helm:
-          valuesObject:
+          #valuesObject:
+          values: |
             crds:
               enabled: true
-            {{- $email := (index .metadata.annotations "feat/cert-manager/email") | default "" -}}
-            {{- if $email }}
+            {{- with (index .metadata.annotations "feat/cert-manager/email") }}
             extraObjects:
               - |
                 apiVersion: cert-manager.io/v1
@@ -51,7 +51,7 @@ spec:
                 spec:
                   acme:
                     server: https://acme-v02.api.letsencrypt.org/directory
-                    email: {{$email}}
+                    email: {{ . }}
                     privateKeySecretRef:
                       name: letsencrypt-prod
               - |
@@ -62,7 +62,7 @@ spec:
                 spec:
                   acme:
                     server: https://acme-staging-v02.api.letsencrypt.org/directory
-                    email: {{$email}}
+                    email: {{ . }}
                     privateKeySecretRef:
                       name: letsencrypt-staging
-            {{ end }}
+            {{- end }}
