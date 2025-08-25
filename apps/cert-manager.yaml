@@ -3,7 +3,7 @@ kind: ApplicationSet
 metadata:
   name: cert-manager-jetstack
   annotations:
-    description: Cert Manager - Certificate Manager for Kubernetes
+    description: Certificate Manager for Kubernetes
     variables: |
       optionnal email Email address for Let's Encrypt account
   labels:
