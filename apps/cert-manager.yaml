@@ -14,6 +14,7 @@ spec:
             - key: "feat/cert-manager"
               operator: In
               values: ["jetstack"]
+  goTemplate: true
   template:
     metadata:
       name: 'cert-manager'
@@ -39,6 +40,8 @@ spec:
           valuesObject:
             crds:
               enabled: true
+            {{- $email := (index .metadata.annotations "feat/cert-manager/email") | default "" -}}
+            {{- if $email }}
             extraObjects:
               - |
                 apiVersion: cert-manager.io/v1
@@ -48,7 +51,7 @@ spec:
                 spec:
                   acme:
                     server: https://acme-v02.api.letsencrypt.org/directory
-                    email: noreply@idonotreply.com
+                    email: {{$email}}
                     privateKeySecretRef:
                       name: letsencrypt-prod
               - |
@@ -59,6 +62,7 @@ spec:
                 spec:
                   acme:
                     server: https://acme-staging-v02.api.letsencrypt.org/directory
-                    email: noreply@idonotreply.com
+                    email: {{$email}}
                     privateKeySecretRef:
                       name: letsencrypt-staging
+            {{ end }}
