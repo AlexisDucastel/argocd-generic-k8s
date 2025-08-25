@@ -24,7 +24,7 @@ spec:
     spec:
       project: default
       destination:
-        server: '{{server}}'
+        server: '{{ .server }}'
         namespace: cert-manager
       syncPolicy:
         automated:
