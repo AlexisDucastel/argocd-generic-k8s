@@ -113,18 +113,34 @@ function help {
     echo "Commands:"
     echo "  help - Show this help message"
     echo "  init - Install or upgrade argocd-generic-k8s stack"
+    echo "  list - List all available features"
+    echo "  ps - List all installed features"
+    echo "  add <alias> - Add a feature"
+    echo "  remove <alias> - Remove a feature"
+    echo "  get <alias> <var> - Get a feature variable"
+    echo "  set <alias> <var> <value> - Set a feature variable"
+    echo "  unset <alias> <var> - Unset a feature variable"
 }
 
 
+function ps {
+  kubectl -n argocd get secret local \
+    -o go-template='{{range $k,$v := .metadata.labels}}{{printf "%s %s\n" $k $v}}{{end}}' \
+    | grep -E "^(feat|app)/" | while read label flavor; do
+      echo "Feature $label=$flavor:"
+      local feature=$(echo $label | cut -d'/' -f2)
+      kubectl get applications.argoproj.io -n argocd -l feat=$feature,flavor=$flavor \
+        -o go-template='{{range $k,$v := .items}}{{printf "%s %s %s\n" $v.metadata.name $v.status.sync.status $v.status.health.status }}{{end}}' \
+        | while read name sync health; do
+          echo "  [$health] App $name is $sync"
+        done
+    done
+}
 function list {
-  # kubectl -n argocd get secret local \
-  #   -o go-template='{{range $k,$v := .metadata.labels}}{{printf "%s %s\n" $k $v}}{{end}}' \
-  #   | grep -E "^(feat|app)/" | while read label value; do
-  #     echo "  $label: $value"
-  #   done
-
-  kubectl -n argocd get secret local  \
-    -o go-template='{{printf "%-30s %-30s\n" "Label" "value"}}{{range $k,$v := .metadata.labels}}{{printf "%-30s %-30s\n" $k $v}}{{end}}'
+  local filter=""
+  [ ! -z "$1" ] && filter="-l feat=$1"
+  kubectl get appset -n argocd $filter \
+    -o go-template='{{range $k,$v := .items}}{{printf "feat/%s=%s\n => %s\n" $v.metadata.labels.feat $v.metadata.labels.flavor (or $v.metadata.annotations.description "")}}{{end}}'
 }
 
 function add {
@@ -132,7 +148,28 @@ function add {
 }
 
 function remove {
-  kubectl -n argocd label secret local "$1"-
+  local feature=$(echo $1 | cut -d'=' -f1)
+  kubectl -n argocd label secret local "$feature"-
+}
+
+function get {
+  local filter="feat/"
+  [ ! -z "$1" ] && filter="$(echo $1 | cut -d'=' -f1).$2"
+  kubectl -n argocd get secret local \
+    -o go-template='{{range $k,$v := .metadata.annotations}}{{printf "%s=%s\n" $k $v}}{{end}}' \
+    | grep -E "^${filter}"
+}
+
+function set {
+  local feature="$(echo $1 | cut -d'=' -f1)"
+  local var="$2"
+  local value="$3"
+  kubectl -n argocd annotate secret local "${feature}.${var}"="$value"
+}
+function unset {  
+  local feature="$(echo $1 | cut -d'=' -f1)"
+  local var="$2"
+  kubectl -n argocd annotate secret local "${feature}.${var}"-
 }
 
 if [ $# -eq 0 ]; then
@@ -144,17 +181,32 @@ case $1 in
     help)
         help
         ;;
-    init)
+    init|i)
         init
         ;;
-    list)
-        list
+    list|l)
+        list $2
         ;;
-    add)
+    ps|p)
+        ps
+        ;;
+    add|a)
         add $2
         ;;
-    remove)
+    remove|rm)
         remove $2
+        ;;
+    get|g)
+        shift
+        get $@
+        ;;
+    set|s)
+        shift
+        set $@
+        ;;
+    unset|u)
+        shift
+        unset $@
         ;;
     *)
         help
