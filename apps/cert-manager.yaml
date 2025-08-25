@@ -39,7 +39,6 @@ spec:
           valuesObject:
             crds:
               enabled: true
-            {{ with metadata.annotations.feat/cert-manager/email }}
             extraObjects:
               - |
                 apiVersion: cert-manager.io/v1
@@ -49,7 +48,7 @@ spec:
                 spec:
                   acme:
                     server: https://acme-v02.api.letsencrypt.org/directory
-                    email: {{ . }}
+                    email: noreply@idonotreply.com
                     privateKeySecretRef:
                       name: letsencrypt-prod
               - |
@@ -60,7 +59,6 @@ spec:
                 spec:
                   acme:
                     server: https://acme-staging-v02.api.letsencrypt.org/directory
-                    email: {{ . }}
+                    email: noreply@idonotreply.com
                     privateKeySecretRef:
                       name: letsencrypt-staging
-            {{ end }}
