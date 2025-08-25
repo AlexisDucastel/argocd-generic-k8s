@@ -41,7 +41,7 @@ spec:
           values: |
             crds:
               enabled: true
-            {{- with (index .metadata.annotations "feat/cert-manager/email") }}
+            {{- with (index .metadata.annotations "feat/cert-manager.email") }}
             extraObjects:
               - |
                 apiVersion: cert-manager.io/v1
