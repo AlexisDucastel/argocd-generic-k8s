@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: grafana-operator-official
+  name: grafana-operator-grafana
   annotations:
     description: Operator that automatically manages Grafana instances.
     variables: ""
   labels:
     alias: gfo
     feat: grafana-operator
-    flavor: official
+    flavor: grafana 
 spec:
   generators:
     - clusters:
@@ -16,14 +16,14 @@ spec:
           matchExpressions:
             - key: "feat/grafana-operator"
               operator: In
-              values: ["official"]
+              values: ["grafana"]
   goTemplate: true
   template:
     metadata:
-      name: 'grafana-operator-official'
+      name: 'grafana-operator-grafana'
       labels:
         feat: grafana-operator
-        flavor: official
+        flavor: grafana
     spec:
       project: default
       destination:
