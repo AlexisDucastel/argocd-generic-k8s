@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kro-run
+  annotations:
+    description: Kro.run operator for Kubernetes
+  labels:
+    alias: kro
+    feat: kro
+    flavor: kro-run
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: "feat/kro"
+              operator: In
+              values: ["kro-run"]
+  goTemplate: true
+  template:
+    metadata:
+      name: 'kro-run'
+      labels:
+        feat: kro
+        flavor: kro-run
+    spec:
+      project: default
+      destination:
+        server: '{{ .server }}'
+        namespace: kro
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      source:
+        repoURL: oci://ghcr.io/kro-run/kro/kro
+        chart: kro
+        targetRevision: x
+        helm:
+          #valuesObject:
+          values: |
+            # none
