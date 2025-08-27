@@ -60,6 +60,7 @@ spec:
         chart: victoria-metrics-k8s-stack
         targetRevision: "0.x"
         helm:
+          releaseName: monitoring-vmstack
           # https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-k8s-stack/values.yaml
           values: |
             vmsingle:
