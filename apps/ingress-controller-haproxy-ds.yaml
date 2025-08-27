@@ -45,4 +45,5 @@ spec:
               kind: DaemonSet
               daemonset:
                 useHostPort: true
+              ingressClass: null # Listen to all ingress classes
           #values: |
