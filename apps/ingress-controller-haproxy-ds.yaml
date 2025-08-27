@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ingress-controller-haproxy-ds
+  annotations:
+    description: Ingress Controller based on HAProxy for Kubernetes, using a DaemonSet with hostPort
+    variables: ""
+  labels:
+    alias: ichd
+    feat: ingress-controller
+    flavor: haproxy-ds
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: "feat/ingress-controller"
+              operator: In
+              values: ["haproxy-ds"]
+  goTemplate: true
+  template:
+    metadata:
+      name: 'ingress-controller-haproxy-ds'
+      labels:
+        feat: ingress-controller
+        flavor: haproxy-ds
+    spec:
+      project: default
+      destination:
+        server: '{{ .server }}'
+        namespace: ingress-controller
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      source:
+        repoURL: https://haproxytech.github.io/helm-charts
+        chart: kubernetes-ingress
+        targetRevision: x
+        helm:
+          valuesObject:
+            controller:
+              kind: DaemonSet
+              daemonset:
+                useHostPort: true
+          #values: |
