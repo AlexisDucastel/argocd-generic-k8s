@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: grafana-operator-official
+  annotations:
+    description: Operator that automatically manages Grafana instances.
+    variables: ""
+  labels:
+    alias: gfo
+    feat: grafana-operator
+    flavor: official
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: "feat/grafana-operator"
+              operator: In
+              values: ["official"]
+  goTemplate: true
+  template:
+    metadata:
+      name: 'grafana-operator-official'
+      labels:
+        feat: grafana-operator
+        flavor: official
+    spec:
+      project: default
+      destination:
+        server: '{{ .server }}'
+        namespace: grafana-operator
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+      source:
+        repoURL: ghcr.io/grafana/helm-charts
+        chart: grafana-operator
+        targetRevision: x
+        #helm:
+          #valuesObject:
+          #values: ""
