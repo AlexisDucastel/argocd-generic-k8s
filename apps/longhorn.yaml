@@ -38,6 +38,7 @@ spec:
         chart: longhorn
         targetRevision: ^1.x
         helm:
+          # https://github.com/longhorn/longhorn/blob/master/deploy/charts/longhorn/values.yaml
           valuesObject:
             preUpgradeChecker:
               jobEnabled: false

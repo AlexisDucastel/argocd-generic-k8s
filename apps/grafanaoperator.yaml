@@ -1,3 +1,4 @@
+# See https://grafana.github.io/grafana-operator/docs/examples/
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -39,6 +40,7 @@ spec:
         repoURL: ghcr.io/grafana/helm-charts
         chart: grafana-operator
         targetRevision: x
+        # https://github.com/grafana/grafana-operator/blob/master/deploy/helm/grafana-operator/values.yaml
         #helm:
           #valuesObject:
           #values: ""

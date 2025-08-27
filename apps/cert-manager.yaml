@@ -41,7 +41,7 @@ spec:
         chart: cert-manager
         targetRevision: v1.x
         helm:
-          #valuesObject:
+          # https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/values.yaml
           values: |
             crds:
               enabled: true

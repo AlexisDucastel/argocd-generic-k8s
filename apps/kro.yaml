@@ -39,6 +39,6 @@ spec:
         chart: kro
         targetRevision: v0.x
         helm:
-          #valuesObject:
+          # https://github.com/kro-run/kro/blob/main/helm/values.yaml
           values: |
             # none
