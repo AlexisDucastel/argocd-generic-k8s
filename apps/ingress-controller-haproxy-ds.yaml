@@ -40,10 +40,9 @@ spec:
         chart: kubernetes-ingress
         targetRevision: x
         helm:
-          valuesObject:
+          values: |
             controller:
               kind: DaemonSet
               daemonset:
                 useHostPort: true
               ingressClass: null # Listen to all ingress classes
-          #values: |
