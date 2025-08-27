@@ -140,11 +140,17 @@ function list {
   local filter=""
   [ ! -z "$1" ] && filter="-l feat=$1"
   kubectl get appset -n argocd $filter \
-    -o go-template='{{range $k,$v := .items}}{{printf "feat/%s=%s\n => %s\n" $v.metadata.labels.feat $v.metadata.labels.flavor (or $v.metadata.annotations.description "")}}{{end}}'
+    -o go-template='{{range $k,$v := .items}}{{printf "feat/%s=%s (%s)\n => %s\n" $v.metadata.labels.feat $v.metadata.labels.flavor $v.metadata.labels.alias (or $v.metadata.annotations.description "")}}{{end}}'
 }
 
 function add {
-  kubectl -n argocd label secret local "$1"
+  label="$1"
+
+  # Search if the arg is an alias of an appset labels: { alias: <alias> }
+  local aliasOf=$(kubectl get -n argocd appset -l alias=$label -o go-template='{{ range $i,$v := .items}}feat/{{$v.metadata.labels.feat}}={{$v.metadata.labels.flavor}}{{end}}' | head -n 1)
+  [ "$aliasOf" != "" ] && echo "$label is an alias for $aliasOf" && label="$aliasOf"
+
+  kubectl -n argocd label secret local "$label"
 }
 
 function remove {
