@@ -58,6 +58,10 @@ spec:
                     email: {{ . }}
                     privateKeySecretRef:
                       name: letsencrypt-prod
+                    solvers:
+                    - http01:
+                        ingress:
+                          ingressClassName: ""
               - |
                 apiVersion: cert-manager.io/v1
                 kind: ClusterIssuer
@@ -69,4 +73,8 @@ spec:
                     email: {{ . }}
                     privateKeySecretRef:
                       name: letsencrypt-staging
+                    solvers:
+                    - http01:
+                        ingress:
+                          ingressClassName: ""
             {{- end }}
