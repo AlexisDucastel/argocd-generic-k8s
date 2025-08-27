@@ -37,7 +37,7 @@ spec:
       source:
         repoURL: oci://ghcr.io/kro-run/kro/kro
         chart: kro
-        targetRevision: x
+        targetRevision: v0.x
         helm:
           #valuesObject:
           values: |
