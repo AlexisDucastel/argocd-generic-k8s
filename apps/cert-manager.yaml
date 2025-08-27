@@ -60,8 +60,7 @@ spec:
                       name: letsencrypt-prod
                     solvers:
                     - http01:
-                        ingress:
-                          ingressClassName: ""
+                        ingress: {}
               - |
                 apiVersion: cert-manager.io/v1
                 kind: ClusterIssuer
@@ -75,6 +74,5 @@ spec:
                       name: letsencrypt-staging
                     solvers:
                     - http01:
-                        ingress:
-                          ingressClassName: ""
+                        ingress: {}
             {{- end }}
