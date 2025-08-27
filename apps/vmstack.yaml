@@ -1,0 +1,103 @@
+# https://docs.victoriametrics.com/helm/victoriametrics-k8s-stack/
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: monitoring-vmstack-gfo
+  annotations:
+    description: Monitoring stack with Victoria Metrics that depends on Grafana Operator
+  labels:
+    alias: vmstack
+    feat: monitoring
+    flavor: vmstack-gfo
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchExpressions:
+            - key: "feat/monitoring"
+              operator: In
+              values: ["vmstack-gfo"]
+            - key: "feat/csi" # Depends on CSI driver
+              operator: Exists
+            - key: "feat/grafana-operator" # Depends on Grafana Operator
+              operator: Exists
+  goTemplate: true
+  template:
+    metadata:
+      name: 'monitoring-vmstack-gfo'
+      labels:
+        feat: monitoring
+        flavor: vmstack-gfo
+    spec:
+      project: default
+      destination:
+        server: '{{ .server }}'
+        namespace: monitoring
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+      ignoreDifferences:
+        - group: ""
+          kind: Secret
+          #name: <fullname>-validation
+          #namespace: <k8s-stack-namespace>
+          name: monitoring-vmstack-gfo-validation
+          namespace: monitoring
+          jsonPointers:
+            - /data
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          # name: <fullname>-admission
+          name: monitoring-vmstack-gfo-admission
+          jqPathExpressions:
+          - '.webhooks[]?.clientConfig.caBundle'
+      source: 
+        repoURL: https://victoriametrics.github.io/helm-charts/
+        chart: victoria-metrics-k8s-stack
+        targetRevision: "0.x"
+        helm:
+          # https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-k8s-stack/values.yaml
+          values: |
+            vmsingle:
+              enabled: true
+            vmcluster:
+              enabled: false
+            grafana:
+              enabled: true
+            prometheus-operator-crds:
+              enabled: true
+            defaultRules:
+              create: true
+            alertmanager:
+              enabled: true
+            vmalert:
+              enabled: true
+              remoteWriteVMAgent: true
+            vmauth:
+              enabled: true
+            vmagent:
+              enabled: true
+              spec:
+                inlineRelabelConfig:
+                - target_label: cluster
+                  replacement: lab
+            defaultDashboards:
+              enabled: true
+              grafanaOperator:
+                enabled: true
+                spec:
+                  instanceSelector:
+                    matchLabels:
+                      dashboards: "grafana"
+                  allowCrossNamespaceImport: false
+              dashboards:
+                victoriametrics-vmalert:
+                  enabled: true
+                victoriametrics-operator:
+                  enabled: true
+                node-exporter-full:
+                  enabled: true
