@@ -69,9 +69,9 @@ spec:
               enabled: false
             grafana:
               enabled: true
-              persistence:
-                enabled: true
-                size: 1Gi
+              #persistence:
+              #  enabled: true
+              #  size: 1Gi
             prometheus-operator-crds:
               enabled: true
             defaultRules:
